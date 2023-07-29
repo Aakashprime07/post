@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speedometer Progress</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    
+    .speedometer {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(from 90deg, #007bff, #f0f0f0);
+    }
+    
+    .progress-background,
+    .progress-foreground {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    
+    .progress-background {
+      clip-path: polygon(50% 0%, 50% 100%, 0 100%);
+      background: #f0f0f0;
+    }
+    
+    .progress-foreground {
+      clip-path: polygon(50% 0%, 50% 100%, 100% 100%);
+      background: #007bff;
+      transform-origin: bottom;
+      transform: scaleY(0);
+      transition: transform 1s ease-in-out;
+    }
+    
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-weight: bold;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="speedometer">
+    <div class="progress-background"></div>
+    <div class="progress-foreground"></div>
+    <div class="progress-text">
+      <span class="speed-value">0%</span>
+    </div>
+  </div>
+
+  <script>
+    const progressForeground = document.querySelector(".progress-foreground");
+const speedValue = document.querySelector(".speed-value");
+
+const targetPercentage = 90; // Set the target percentage for the progress
+
+function updateProgress() {
+  const currentPercentage = parseFloat(progressForeground.style.transform.match(/scaleY\((.*?)\)/)[1]);
+  if (currentPercentage < targetPercentage / 100) {
+    const newPercentage = (currentPercentage + 0.01).toFixed(2);
+    progressForeground.style.transform = `scaleY(${newPercentage})`;
+    speedValue.textContent = `${(newPercentage * 100).toFixed(0)}%`;
+    requestAnimationFrame(updateProgress);
+  }
+}
+
+updateProgress();
+  </script>
+</body>
+</html>
